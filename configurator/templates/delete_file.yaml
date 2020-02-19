@@ -5,5 +5,7 @@ hosts:
 user: ntata
 password: tiptop123
 action: 
-  install-pkg:
-  - vim
+  delete-file:
+    metadata:
+      name: hello-world.php
+      path: /var/www/html

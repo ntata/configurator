@@ -1,0 +1,20 @@
+---
+hosts:
+- 18.191.242.16
+- 13.59.83.101
+user: ntata
+password: tiptop123
+action: 
+  create-file:
+    metadata:
+      name: hello-world.php
+      user_owner: root 
+      group_owner: root 
+      numeric_mode: 644
+      path: /var/www/html
+    data: |
+      <?php
+        header("Content-Type: text/plain");
+        echo "Hello, world!\n";
+      ?>
+     

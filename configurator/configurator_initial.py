@@ -78,7 +78,6 @@ class Configurator(object):
 
 def main():
     c = Configurator()
-    #import pdb; pdb.set_trace()
     #try:
     #    for server in ['18.191.242.16', '13.59.83.101']:
     #        output = c.run_command("echo 'tiptop123' | sudo -S apt-get update", server)
