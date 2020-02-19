@@ -23,7 +23,9 @@ Options:
 from ssh import SshConnection
 from packages import Packages
 from template import Template
+from files import File
 from docopt import docopt
+import sys
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='Configurator 0.1')
@@ -32,6 +34,8 @@ if __name__ == '__main__':
     commands = ''
     install_pkgs = ''
     uninstall_pkgs = ''
+    file_metadata = ''
+    file_data = ''
     if not arguments['--template']:
         hosts = arguments['--hosts']
         user = arguments['--user']
@@ -54,12 +58,21 @@ if __name__ == '__main__':
             install_pkgs = parsed['action']['install-pkg']
         elif 'uninstall-pkg' in parsed['action'].keys():
             uninstall_pkgs = parsed['action']['uninstall-pkg']
+        elif 'create-file' in parsed['action'].keys():
+            file_metadata = parsed['action']['create-file']['metadata']
+            file_data = parsed['action']['create-file']['data']
+        elif 'delete-file' in parsed['action'].keys():
+            file_metadata = parsed['action']['delete-file']['metadata']
     try:
+        #import pdb; pdb.set_trace()
         for host in hosts:
             if commands:
                 for command in commands:
                     output, error = c.run_command(command, host, user, password)
-                    print("\n*** Output of '{}' on '{}'".format(command, host))
+                    if error != []:
+                        raise Exception(error[0])
+                    else:
+                        print("\n*** Output of '{}' on '{}'".format(command, host))
                     for o in output:
                         print(o.strip('\n'))
             elif install_pkgs:
@@ -68,5 +81,11 @@ if __name__ == '__main__':
             elif uninstall_pkgs:
                 p = Packages()
                 p.uninstall_package(host, uninstall_pkgs, user, password)
+            elif file_data and file_metadata:
+                f = File()
+                f.create_file(host, file_data, file_metadata, user, password)
+            elif not file_data and file_metadata:
+                f = File()
+                f.delete_file(host, file_metadata, user, password)
     except Exception as e:
         print(e)

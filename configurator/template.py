@@ -18,12 +18,10 @@ class Template:
 
     def loadTemplate(self, name):
         template_file = self.templateSelector(name)
-        #import pdb; pdb.set_trace()
         try:
             result = {}
             with open(template_file, 'r') as f:
                 parsed = yaml.load(f.read(), yaml.SafeLoader)
-            #print(parsed)
             return parsed
         except Exception as e:
             print(e)
