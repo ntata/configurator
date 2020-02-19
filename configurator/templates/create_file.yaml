@@ -7,9 +7,9 @@ password: tiptop123
 action: 
   create-file:
     metadata:
-      name: test-3.php
-      user_owner: ntata 
-      group_owner: ntata 
+      name: hello-world.php
+      user_owner: root 
+      group_owner: root 
       numeric_mode: 644
       path: /var/www/html
     data: |

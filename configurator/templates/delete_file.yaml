@@ -7,5 +7,5 @@ password: tiptop123
 action: 
   delete-file:
     metadata:
-      name: test-3.php
+      name: hello-world.php
       path: /var/www/html
