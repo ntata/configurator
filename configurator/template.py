@@ -1,5 +1,6 @@
 import os
 import yaml
+import sys
 
 
 class Template:
@@ -13,7 +14,7 @@ class Template:
                 return os.path.join(templates_path, name)
         except Exception as e:
             print(e)
-            raise
+            sys.exit(1)
 
     def loadTemplate(self, name):
         template_file = self.templateSelector(name)
@@ -26,4 +27,4 @@ class Template:
             return parsed
         except Exception as e:
             print(e)
-            raise
+            sys.exit(1)
