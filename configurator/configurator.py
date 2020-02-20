@@ -24,18 +24,20 @@ from ssh import SshConnection
 from packages import Packages
 from template import Template
 from files import File
+from service import Service
 from docopt import docopt
 import sys
+import os
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='Configurator 0.1')
-    c = SshConnection()
-    t = Template()
     commands = ''
     install_pkgs = ''
     uninstall_pkgs = ''
     file_metadata = ''
     file_data = ''
+    service = ''
+    service_action = ''
     if not arguments['--template']:
         hosts = arguments['--hosts']
         user = arguments['--user']
@@ -47,8 +49,9 @@ if __name__ == '__main__':
         elif arguments['--uninstall-pkg']:
             uninstall_pkgs = arguments['--uninstall-pkg']
     else:
+        t = Template()
         template = arguments['--template']
-        parsed = t.loadTemplate(template)
+        parsed = t.loadYamlFile(template, "templates")
         hosts = parsed['hosts']
         user = parsed['user']
         password = parsed['password']
@@ -63,8 +66,12 @@ if __name__ == '__main__':
             file_data = parsed['action']['create-file']['data']
         elif 'delete-file' in parsed['action'].keys():
             file_metadata = parsed['action']['delete-file']['metadata']
+        elif 'service_name' in parsed['action'].keys():
+            service_action = parsed['action']['service_action']
+            service = parsed['action']['service_name']
     try:
-        #import pdb; pdb.set_trace()
+        c = SshConnection()
+        s = Service()
         for host in hosts:
             if commands:
                 for command in commands:
@@ -87,5 +94,7 @@ if __name__ == '__main__':
             elif not file_data and file_metadata:
                 f = File()
                 f.delete_file(host, file_metadata, user, password)
+            elif service:
+                s.manageService(service, service_action, host, user, password)
     except Exception as e:
         print(e)

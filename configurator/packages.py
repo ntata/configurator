@@ -62,7 +62,7 @@ class Packages():
             else:
                 try:
                     print("\nUninstalling '{}' on '{}'\n".format(package, host))
-                    cmd = "sudo apt-get remove {} -y && sudo apt-get autoremove -y".format(package)
+                    cmd = "sudo apt-get purge {}".format(package)
                     c = SshConnection()
                     output, error = c.run_command(cmd, host, user, password)
                     for o in output:
