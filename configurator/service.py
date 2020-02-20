@@ -22,32 +22,32 @@ class Service():
             raise e
 
 
-    def manageService(self, service, service_action, host, user, password):
+    def manageService(self, services, service_action, pkg_dps, host, user, password):
         try:
-            # check if package dependencies are already installed. If not, install them now
-            if service_action == 'start' or 'restart':
-                file_dps, pkg_dps = self.getServiceDependencies(service)
-                p = Packages()
-                pkgs_to_install = []
-                print("\n\n*** Checking dependencies...")
-                for pkg in pkg_dps:
-                    if p.check_if_package_installed(pkg, host, user, password):
-                        pass
-                    else:
-                        pkgs_to_install.append(pkg)
-                p.install_package(host, pkgs_to_install, user, password)
-            if service_action == 'stop':
-                pass
-            print("\n\n*** {}ing {} service on {}".format(service_action, service, host))
-                
-            cmd = "sudo service {} {}".format(service, service_action)
-            c = SshConnection()
-            output, error = c.run_command(cmd, host, user, password)
-            if error == []:
-                for o in output:
-                    print(o.strip('\n'))
-            else:
-                raise Exception(error[0])
+            for service in services:
+                # check if package dependencies are already installed. If not, install them now
+                if service_action == 'start' or 'restart':
+                    p = Packages()
+                    pkgs_to_install = []
+                    print("\n\n*** Checking dependencies...")
+                    for pkg in pkg_dps:
+                        if p.check_if_package_installed(pkg, host, user, password):
+                            pass
+                        else:
+                            pkgs_to_install.append(pkg)
+                    p.install_package(host, pkgs_to_install, user, password)
+                if service_action == 'stop':
+                    pass
+                print("\n\n*** {}ing {} service on {}".format(service_action, service, host))
+                    
+                cmd = "sudo service {} {}".format(service, service_action)
+                c = SshConnection()
+                output, error = c.run_command(cmd, host, user, password)
+                if error == []:
+                    for o in output:
+                        print(o.strip('\n'))
+                else:
+                    raise Exception(error[0])
         except Exception as e:
             print(e)
 

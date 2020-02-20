@@ -5,5 +5,8 @@ hosts:
 user: ntata
 password: tiptop123
 action:
-  service_name: apache2
+  service_name: 
+  - apache2
   service_action: stop
+  pkg_deps:
+  - apache2

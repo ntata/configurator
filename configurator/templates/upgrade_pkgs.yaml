@@ -5,7 +5,7 @@ hosts:
 user: ntata
 password: tiptop123
 action: 
-  uninstall-pkg:
+  upgrade-pkg:
   - apache2
   service_deps:
   - apache2 

@@ -34,10 +34,13 @@ if __name__ == '__main__':
     commands = ''
     install_pkgs = ''
     uninstall_pkgs = ''
+    upgrade_pkgs = ''
+    pkg_service_deps = ''
     file_metadata = ''
     file_data = ''
-    service = ''
+    services = ''
     service_action = ''
+    service_pkg_deps = ''
     if not arguments['--template']:
         hosts = arguments['--hosts']
         user = arguments['--user']
@@ -59,8 +62,11 @@ if __name__ == '__main__':
             commands = parsed['action']['run-cmd']
         elif 'install-pkg' in parsed['action'].keys():
             install_pkgs = parsed['action']['install-pkg']
+            pkg_service_deps = parsed['action']['service_deps']
         elif 'uninstall-pkg' in parsed['action'].keys():
             uninstall_pkgs = parsed['action']['uninstall-pkg']
+        elif 'upgrade-pkg' in parsed['action'].keys():
+            upgrade_pkgs = parsed['action']['upgrade-pkg']
         elif 'create-file' in parsed['action'].keys():
             file_metadata = parsed['action']['create-file']['metadata']
             file_data = parsed['action']['create-file']['data']
@@ -68,7 +74,8 @@ if __name__ == '__main__':
             file_metadata = parsed['action']['delete-file']['metadata']
         elif 'service_name' in parsed['action'].keys():
             service_action = parsed['action']['service_action']
-            service = parsed['action']['service_name']
+            services = parsed['action']['service_name']
+            service_pkg_deps = parsed['action']['pkg_deps']
     try:
         c = SshConnection()
         s = Service()
@@ -85,16 +92,21 @@ if __name__ == '__main__':
             elif install_pkgs:
                 p = Packages()
                 p.install_package(host, install_pkgs, user, password)
+                s = Service()
+                s.manageService(pkg_service_deps, 'restart', service_pkg_deps, host, user, password)
             elif uninstall_pkgs:
                 p = Packages()
                 p.uninstall_package(host, uninstall_pkgs, user, password)
+            elif upgrade_pkgs:
+                p = Packages()
+                p.upgrade_package(host, upgrade_pkgs, user, password)
             elif file_data and file_metadata:
                 f = File()
                 f.create_file(host, file_data, file_metadata, user, password)
             elif not file_data and file_metadata:
                 f = File()
                 f.delete_file(host, file_metadata, user, password)
-            elif service:
-                s.manageService(service, service_action, host, user, password)
+            elif services:
+                s.manageService(services, service_action, service_pkg_deps, host, user, password)
     except Exception as e:
         print(e)
