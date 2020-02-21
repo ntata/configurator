@@ -22,7 +22,7 @@ class Service():
             raise e
 
 
-    def manageService(self, services, service_action, pkg_dps, host, user, password):
+    def manageService(self, services, service_action, pkg_dps, host):
         try:
             for service in services:
                 # check if package dependencies are already installed. If not, install them now
@@ -31,18 +31,18 @@ class Service():
                     pkgs_to_install = []
                     print("\n\n*** Checking dependencies...")
                     for pkg in pkg_dps:
-                        if p.check_if_package_installed(pkg, host, user, password):
+                        if p.check_if_package_installed(pkg, host):
                             pass
                         else:
                             pkgs_to_install.append(pkg)
-                    p.install_package(host, pkgs_to_install, user, password)
+                    p.install_package(host, pkgs_to_install)
                 if service_action == 'stop':
                     pass
                 print("\n\n*** {}ing {} service on {}".format(service_action, service, host))
                     
                 cmd = "sudo service {} {}".format(service, service_action)
                 c = SshConnection()
-                output, error = c.run_command(cmd, host, user, password)
+                output, error = c.run_command(cmd, host)
                 if error == []:
                     for o in output:
                         print(o.strip('\n'))

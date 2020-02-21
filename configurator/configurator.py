@@ -4,12 +4,10 @@
 ######## configurator #########
 
 Usage:
-    configurator.py ([-h <hosts>...] -u <user> -p <password> ([-c <command>...] | [--install-pkg <packages>...] | [--uninstall-pkg <packages>...]) | -t <template>)
+    configurator.py ([-h <hosts>...] ([-c <command>...] | [--install-pkg <packages>...] | [--uninstall-pkg <packages>...]) | -t <template>)
 
 Options:
     -h hosts, --hosts hosts          # remote host to configure
-    -u user, --user user             # ssh user
-    -p password, --password password # ssh password for the user
     -c command, --run-cmd command    # command to run on remote host
     --install-pkg <packages>         # packages to install
     --uninstall-pkg <packages>          # packages to uninstall
@@ -43,8 +41,6 @@ if __name__ == '__main__':
     service_pkg_deps = ''
     if not arguments['--template']:
         hosts = arguments['--hosts']
-        user = arguments['--user']
-        password = arguments['--password']
         if arguments['--run-cmd']:
             commands = arguments['--run-cmd']
         elif arguments['--install-pkg']:
@@ -56,8 +52,6 @@ if __name__ == '__main__':
         template = arguments['--template']
         parsed = t.loadYamlFile(template, "templates")
         hosts = parsed['hosts']
-        user = parsed['user']
-        password = parsed['password']
         if 'run-cmd' in parsed['action'].keys():
             commands = parsed['action']['run-cmd']
         elif 'install-pkg' in parsed['action'].keys():
@@ -77,12 +71,13 @@ if __name__ == '__main__':
             services = parsed['action']['service_name']
             service_pkg_deps = parsed['action']['pkg_deps']
     try:
+        #import pdb; pdb.set_trace()
         c = SshConnection()
         s = Service()
         for host in hosts:
             if commands:
                 for command in commands:
-                    output, error = c.run_command(command, host, user, password)
+                    output, error = c.run_command(command, host)
                     if error != []:
                         raise Exception(error[0])
                     else:
@@ -91,22 +86,22 @@ if __name__ == '__main__':
                         print(o.strip('\n'))
             elif install_pkgs:
                 p = Packages()
-                p.install_package(host, install_pkgs, user, password)
+                p.install_package(host, install_pkgs)
                 s = Service()
-                s.manageService(pkg_service_deps, 'restart', service_pkg_deps, host, user, password)
+                s.manageService(pkg_service_deps, 'restart', service_pkg_deps, host)
             elif uninstall_pkgs:
                 p = Packages()
-                p.uninstall_package(host, uninstall_pkgs, user, password)
+                p.uninstall_package(host, uninstall_pkgs)
             elif upgrade_pkgs:
                 p = Packages()
-                p.upgrade_package(host, upgrade_pkgs, user, password)
+                p.upgrade_package(host, upgrade_pkgs)
             elif file_data and file_metadata:
                 f = File()
-                f.create_file(host, file_data, file_metadata, user, password)
+                f.create_file(host, file_data, file_metadata)
             elif not file_data and file_metadata:
                 f = File()
-                f.delete_file(host, file_metadata, user, password)
+                f.delete_file(host, file_metadata)
             elif services:
-                s.manageService(services, service_action, service_pkg_deps, host, user, password)
+                s.manageService(services, service_action, service_pkg_deps, host)
     except Exception as e:
         print(e)
