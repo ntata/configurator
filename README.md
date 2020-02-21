@@ -13,7 +13,7 @@ In order to run configurator, you need the following packages installed on your 
 1. Clone the repo
 ` git clone git@github.com:ntata/configurator.git`
 2. Install python3
-` apt-get install python3.6
+`apt-get install python3.6`
 3. Create virtual environment
 `python -m venv .venv && source .venv/bin/activate`
 4. Install requirements
@@ -22,7 +22,8 @@ In order to run configurator, you need the following packages installed on your 
 `export CONFIGURATOR_SSH_USER=****`
 `export CONFIGURATOR_SSH_USER_PASSWORD=****`
 6 run templates
-`python configurator.py -t run_cmd.yaml
+```
+$python configurator.py -t run_cmd.yaml
 
 *** Output of 'ls -la' on '54.196.242.68'
 total 24
@@ -44,4 +45,5 @@ drwxr-xr-x 22 root root 4096 Jan 13 22:44 ..
 drwx------  2 root root 4096 Jan 15 02:53 .cache
 -rw-r--r--  1 root root  140 Feb 20  2014 .profile
 -rw-r--r--  1 root root    0 Feb 21 19:51 test_file_1
--rw-r--r--  1 root root    0 Feb 21 19:51 test_file_2```
+-rw-r--r--  1 root root    0 Feb 21 19:51 test_file_2
+```
