@@ -2,8 +2,6 @@
 hosts:
 - 18.191.242.16
 - 13.59.83.101
-user: ntata
-password: tiptop123
 action: 
   uninstall-pkg:
   - apache2
