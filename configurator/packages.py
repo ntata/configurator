@@ -6,6 +6,12 @@ class Packages():
         pass
 
     def check_if_valid_package(self, package, host, user, password):
+        """
+        method to check if the package name is valid and is available
+        in the configured apt repositories
+
+        returnType: boolean
+        """
         cmd = "apt-cache search --names-only '^{}'".format(package)
         c = SshConnection()
         output, error = c.run_command(cmd, host, user, password)
@@ -40,15 +46,15 @@ class Packages():
                continue
            else:
                try:
-                   print("\n*** Proceeding to install '{}'\n".format(package))
+                   print("\n*** Proceeding to install '{}' on '{}'\n".format(package, host))
                    cmd = "sudo apt-get update && sudo apt-get install {} -y".format(package)
                    c = SshConnection()
                    output, error = c.run_command(cmd, host, user, password)
-                   if error[-1] == "E: Unable to locate package php\n":
-                       raise Exception("E: Unable to locate package php\n")
+                   if error != [] and error[-1] == "E: Unable to locate package {}\n".format(package):
+                       raise Exception("E: Unable to locate package {}\n".format(package))
                    for o in output:
                        print(o.strip('\n'))
-                   print("*** Successfully installed '{}' on '{}'\n\n".format(package, host))
+                   #print("*** Successfully installed '{}' on '{}'\n\n".format(package, host))
                except Exception as e:
                    print(e)
                    sys.exit(1)
@@ -62,12 +68,33 @@ class Packages():
             else:
                 try:
                     print("\nUninstalling '{}' on '{}'\n".format(package, host))
-                    cmd = "sudo apt-get remove {} -y && sudo apt-get autoremove -y".format(package)
+                    cmd = "sudo apt-get purge {}".format(package)
                     c = SshConnection()
                     output, error = c.run_command(cmd, host, user, password)
                     for o in output:
                         print(o.strip('\n'))
-                    print("*** Successfully uninstalled '{}' from '{}'\n\n".format(package, host))
+                    #print("*** Successfully uninstalled '{}' from '{}'\n\n".format(package, host))
                 except Exception as e:
                     print(e)
                     sys.exit(1)
+    
+    def upgrade_package(self, host, packages, user, password):
+        for package in packages:
+           print("*** Checking to see if '{}' is installed on '{}'\n\n".format(package, host))
+           if self.check_if_valid_package(package, host, user, password):
+               pass
+           if self.check_if_package_installed(package, host, user, password):
+               try:
+                   print("\n*** Proceeding to upgrade '{}' on '{}'".format(package, host))
+                   cmd = "sudo apt-get update && sudo apt-get upgrade {} -y".format(package)
+                   c = SshConnection()
+                   output, error = c.run_command(cmd, host, user, password)
+                   if error != [] and error[-1] == "E: Unable to locate package {}\n".format(package):
+                       raise Exception("E: Unable to locate package {}\n".format(package))
+                   for o in output:
+                       print(o.strip('\n'))
+
+                   #print("*** Successfully upgraded '{}' on '{}'\n\n".format(package, host))
+               except Exception as e:
+                   print(e)
+                   sys.exit(1)

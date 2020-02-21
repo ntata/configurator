@@ -1,0 +1,12 @@
+service:
+- apache2:
+    file_deps:
+    - /etc/apache2/apache2.conf
+    package_deps:
+    - apache2
+- php5:
+    file_deps:
+    - /etc/php5/cli/php.ini
+    - /etc/php5/apache2/php.ini
+    package_deps:
+    - apache2

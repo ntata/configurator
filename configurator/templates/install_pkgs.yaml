@@ -6,5 +6,6 @@ user: ntata
 password: tiptop123
 action: 
   install-pkg:
-  - php5
-  - vim
+  - apache2
+  service_deps:
+  - apache2 

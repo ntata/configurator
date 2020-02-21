@@ -1,0 +1,12 @@
+---
+hosts:
+- 18.191.242.16
+- 13.59.83.101
+user: ntata
+password: tiptop123
+action:
+  service_name:
+  - apache2
+  service_action: start
+  pkg_deps:
+  - apache2
