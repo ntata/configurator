@@ -1,9 +1,9 @@
 ---
 hosts:
-- 18.191.242.16
-- 13.59.83.101
+- 54.196.242.68
+- 34.229.127.246
 action: 
   uninstall-pkg:
-  - apache2
+  - php5
   service_deps:
   - apache2 

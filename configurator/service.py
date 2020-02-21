@@ -40,7 +40,7 @@ class Service():
                     pass
                 print("\n\n*** {}ing {} service on {}".format(service_action, service, host))
                     
-                cmd = "sudo service {} {}".format(service, service_action)
+                cmd = "service {} {}".format(service, service_action)
                 c = SshConnection()
                 output, error = c.run_command(cmd, host)
                 if error == []:
