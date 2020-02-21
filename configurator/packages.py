@@ -47,7 +47,7 @@ class Packages():
            else:
                try:
                    print("\n*** Proceeding to install '{}' on '{}'\n".format(package, host))
-                   cmd = "sudo apt-get update && sudo apt-get install {} -y".format(package)
+                   cmd = "apt-get update && apt-get install {} -y".format(package)
                    c = SshConnection()
                    output, error = c.run_command(cmd, host)
                    if error != [] and error[-1] == "E: Unable to locate package {}\n".format(package):
@@ -68,7 +68,7 @@ class Packages():
             else:
                 try:
                     print("\nUninstalling '{}' on '{}'\n".format(package, host))
-                    cmd = "sudo apt-get purge {}".format(package)
+                    cmd = "apt-get purge {} -y".format(package)
                     c = SshConnection()
                     output, error = c.run_command(cmd, host)
                     for o in output:
@@ -86,7 +86,7 @@ class Packages():
            if self.check_if_package_installed(package, host):
                try:
                    print("\n*** Proceeding to upgrade '{}' on '{}'".format(package, host))
-                   cmd = "sudo apt-get update && sudo apt-get upgrade {} -y".format(package)
+                   cmd = "apt-get update && apt-get upgrade {} -y".format(package)
                    c = SshConnection()
                    output, error = c.run_command(cmd, host)
                    if error != [] and error[-1] == "E: Unable to locate package {}\n".format(package):

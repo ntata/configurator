@@ -71,7 +71,6 @@ if __name__ == '__main__':
             services = parsed['action']['service_name']
             service_pkg_deps = parsed['action']['pkg_deps']
     try:
-        #import pdb; pdb.set_trace()
         c = SshConnection()
         s = Service()
         for host in hosts:

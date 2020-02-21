@@ -29,5 +29,4 @@ class SshConnection():
         for line in stdout:
             output.append(line)
         self.client.close()
-        print("output is '{}' and error is '{}'".format(output, error))
         return output, error

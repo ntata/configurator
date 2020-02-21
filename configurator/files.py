@@ -20,8 +20,8 @@ class File():
 
 
     def set_file_permissions(self, host, file_metadata, file_path):
-        cmd1 = "sudo chown {}:{} {}".format(file_metadata['user_owner'], file_metadata['group_owner'], file_path)
-        cmd2 = "sudo chmod {} {}".format(file_metadata['numeric_mode'], file_path)
+        cmd1 = "chown {}:{} {}".format(file_metadata['user_owner'], file_metadata['group_owner'], file_path)
+        cmd2 = "chmod {} {}".format(file_metadata['numeric_mode'], file_path)
         try:
             c = SshConnection()
             output, error = c.run_command(cmd1+'&&'+cmd2, host)
@@ -33,7 +33,7 @@ class File():
 
     def create_file(self, host, file_data, file_metadata):
         file_path = file_metadata['path']+'/'+file_metadata['name']
-        cmd = "echo '{}' | sudo tee {}".format(file_data, file_path)
+        cmd = "echo '{}' | tee {}".format(file_data, file_path)
         try:
             if self.check_if_file_exists(host, file_metadata, file_path):
                 raise Exception("File already exists on {}!".format(host))
@@ -50,7 +50,7 @@ class File():
 
     def delete_file(self, host, file_metadata):
         file_path = file_metadata['path']+'/'+file_metadata['name']
-        cmd = "sudo rm {}".format(file_path)
+        cmd = "rm {}".format(file_path)
         try:
             if not self.check_if_file_exists(host, file_metadata, file_path):
                 raise Exception("File doesn't exist on {}!".format(host))
