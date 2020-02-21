@@ -11,27 +11,18 @@ In order to run configurator, you need the following packages installed on your 
 
 ## How to execute
 1. Clone the repo
-
-` git clone git@github.com:ntata/configurator.git`
-
+`git clone git@github.com:ntata/configurator.git`
 2. Install python3
-
 `apt-get install python3.6`
-
 3. Create virtual environment
-
 `python -m venv .venv && source .venv/bin/activate`
-
 4. Install requirements
-
-` pip install -r requirements.txt`
-
+`pip install -r requirements.txt`
 5. Set environment variables:
 ```
 export CONFIGURATOR_SSH_USER=****
 export CONFIGURATOR_SSH_USER_PASSWORD=****
 ```
-
 6. run templates
 ```
 $python configurator.py -t run_cmd.yaml
